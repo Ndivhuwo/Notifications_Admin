@@ -3,6 +3,7 @@ import 'package:notifications_admin/constants.dart';
 import 'package:notifications_admin/model/alert.dart';
 import 'package:notifications_admin/model/dropDownSelect.dart';
 import 'package:notifications_admin/network/contract/networkManager.dart';
+import 'package:notifications_admin/widgets/MapUtil.dart';
 import 'package:notifications_admin/widgets/alertDialog.dart';
 import 'package:notifications_admin/widgets/textInputAlertDialog.dart';
 
@@ -123,7 +124,10 @@ class _AdminHomeState extends State<AdminHome> {
                                         alignment: Alignment.bottomLeft,
                                         child: ListTile(
                                           title: Text(
-                                            alertList[index].address != null && alertList[index].address.isNotEmpty
+                                            alertList[index].address != null &&
+                                                    alertList[index]
+                                                        .address
+                                                        .isNotEmpty
                                                 ? alertList[index].address
                                                 : "Unknown Address",
                                             style: TextStyle(
@@ -132,6 +136,16 @@ class _AdminHomeState extends State<AdminHome> {
                                             ),
                                           ),
                                           leading: Icon(Icons.location_on),
+                                          onTap: () {
+                                            if(alertList[index].address != null &&
+                                                alertList[index]
+                                                    .address
+                                                    .isNotEmpty) {
+                                              MapUtil.openMap(
+                                                  alertList[index].latitude,
+                                                  alertList[index].longitude);
+                                            }
+                                          },
                                         ),
                                       ),
                                       Container(
@@ -139,15 +153,14 @@ class _AdminHomeState extends State<AdminHome> {
                                             8, 0, 8, 0),
                                         alignment: Alignment.bottomLeft,
                                         child: Text(
-                                          "Created: ${alertList[index].created}",
+                                          "${alertList[index].created}",
                                           style: TextStyle(
                                             color: Colors.grey,
-                                            fontSize: 14,
+                                            fontSize: 12,
                                           ),
                                           textAlign: TextAlign.end,
                                         ),
                                       ),
-
                                       Container(
                                         padding: const EdgeInsets.fromLTRB(
                                             8, 0, 8, 0),
@@ -166,7 +179,7 @@ class _AdminHomeState extends State<AdminHome> {
                                 ),
                               ),
                               Expanded(
-                                flex: 2,
+                                flex: 1,
                                 child: Align(
                                   alignment: Alignment.center,
                                   child: Padding(
@@ -174,14 +187,18 @@ class _AdminHomeState extends State<AdminHome> {
                                     child: SizedBox(
                                       height: 120,
                                       child: Image.network(
-                                          alertList[index].imageLink != null && alertList[index].imageLink.isNotEmpty ?
-                                      alertList[index].imageLink : Constants.placeholderImage),
+                                          alertList[index].imageLink != null &&
+                                                  alertList[index]
+                                                      .imageLink
+                                                      .isNotEmpty
+                                              ? alertList[index].imageLink
+                                              : Constants.placeholderImage),
                                     ),
                                   ),
                                 ),
                               ),
-                              Expanded(
-                                flex: 2,
+                              Flexible(
+                                flex: 3,
                                 child: Column(
                                   children: <Widget>[
                                     Align(
@@ -189,73 +206,72 @@ class _AdminHomeState extends State<AdminHome> {
                                       child: Container(
                                         padding: EdgeInsets.all(12),
                                         //color: Colors.green,
-                                        child: SizedBox(
-                                          height: 50,
-                                          child: DropdownButtonHideUnderline(
-                                              child: ButtonTheme(
-                                                  alignedDropdown: false,
-                                                  shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                  BorderRadius.circular(1)),
-                                                  child: new DropdownButton<String>(
-                                                    elevation: 2,
-                                                    hint: new Text(
-                                                      "Alert Status",
-                                                      textAlign: TextAlign.center,
-                                                      style: TextStyle(color: Colors.blueGrey),
-                                                    ),
-                                                    value: alertStatus,
-                                                    isExpanded: false,
-                                                    iconSize: 30,
-                                                    style: new TextStyle(
-                                                      color: Colors.blueGrey,fontFamily: 'iransans',
-                                                    ),
-                                                    onChanged: (String value) {
-                                                        alertStatus = value;
-                                                        print("Selected user " + alertStatus);
-                                                        _changeAlertStatus(alertList[index].id, alertStatus);
-                                                    },
-                                                    items: alertStatuses.map((DropDownSelect d) {
-                                                      return new DropdownMenuItem<String>(
-                                                        value: d.value,
-                                                        child: new Text(
-                                                          d.name,
-                                                          textAlign: TextAlign.center,
-                                                          style: new TextStyle(color: Colors.black),
-                                                        ),
-                                                      );
-                                                    }).toList(),
-                                                  )
-                                              )
-                                          ),
-                                        ),
+                                        child: DropdownButtonHideUnderline(
+                                            child: ButtonTheme(
+                                                alignedDropdown: false,
+                                                child:
+                                                    new DropdownButton<String>(
+                                                  elevation: 2,
+                                                  hint: new Text(
+                                                    "Alert Status",
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        color: Colors.blueGrey),
+                                                  ),
+                                                  value: alertStatus,
+                                                  isExpanded: false,
+                                                  iconSize: 10,
+                                                  style: new TextStyle(
+                                                    color: Colors.blueGrey,
+                                                    fontFamily: 'iransans',
+                                                  ),
+                                                  onChanged: (String value) {
+                                                    alertStatus = value;
+                                                    print("Selected user " +
+                                                        alertStatus);
+                                                    _changeAlertStatus(
+                                                        alertList[index].id,
+                                                        alertStatus);
+                                                  },
+                                                  items: alertStatuses
+                                                      .map((DropDownSelect d) {
+                                                    return new DropdownMenuItem<
+                                                        String>(
+                                                      value: d.value,
+                                                      child: new Text(
+                                                        d.name,
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: new TextStyle(
+                                                            color:
+                                                                Colors.black),
+                                                      ),
+                                                    );
+                                                  }).toList(),
+                                                ))),
                                       ),
                                     ),
                                     Align(
                                       alignment: Alignment.bottomRight,
                                       child: Padding(
-                                        padding: EdgeInsets.all(12),
-                                        child: SizedBox(
-                                          height: 50,
-                                          child: RaisedButton(
-                                            elevation: 2.0,
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(1)),
-                                            color: Colors.red,
-                                            child: Text(
-                                              'Delete Entry',
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: Colors.white),
-                                            ),
-                                            onPressed: () => _deleteAlert(
-                                                context,
-                                                alertList[index].id,
-                                                alertList[index].message,
-                                                alertList[index].alertType,
-                                                alertList[index].address),
+                                        padding: EdgeInsets.all(4),
+                                        child: RaisedButton(
+                                          elevation: 2.0,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(1)),
+                                          color: Colors.red,
+                                          child: Icon(
+                                            Icons.delete,
+                                            color: Colors.white,
                                           ),
+                                          onPressed: () => _deleteAlert(
+                                              context,
+                                              alertList[index].id,
+                                              alertList[index].message,
+                                              alertList[index].alertType,
+                                              alertList[index]
+                                                  .userIdentification),
                                         ),
                                       ),
                                     ),
@@ -358,7 +374,9 @@ class _AdminHomeState extends State<AdminHome> {
         context: context,
         builder: (BuildContext context) {
           // return object of type Dialog
-          return MyAlertDialog(okText: "Ok", title: "Delete Alert",
+          return MyAlertDialog(
+            okText: "Ok",
+            title: "Delete Alert",
             message: RichText(
               text: TextSpan(
                 children: <TextSpan>[
@@ -369,10 +387,10 @@ class _AdminHomeState extends State<AdminHome> {
                   ),
                 ],
               ),
-            ),);
+            ),
+          );
         },
       );
-
     }).catchError((error) {
       var errorMessage = error.toString();
       print('deleteAlert Error: $errorMessage');
@@ -381,7 +399,9 @@ class _AdminHomeState extends State<AdminHome> {
         context: context,
         builder: (BuildContext context) {
           // return object of type Dialog
-          return MyAlertDialog(okText: "Ok", title: "Delete Alert",
+          return MyAlertDialog(
+            okText: "Ok",
+            title: "Delete Alert",
             message: RichText(
               text: TextSpan(
                 children: <TextSpan>[
@@ -392,14 +412,17 @@ class _AdminHomeState extends State<AdminHome> {
                   ),
                 ],
               ),
-            ),);
+            ),
+          );
         },
       );
     });
   }
 
   _changeAlertStatus(String alertId, String alertStatus) {
-    widget.networkManager.changeAlertStatus(alertId, alertStatus).then((success) {
+    widget.networkManager
+        .changeAlertStatus(alertId, alertStatus)
+        .then((success) {
       print('deleteAlert Response: $success');
       _refreshIndicatorKey.currentState.show();
 
@@ -407,7 +430,9 @@ class _AdminHomeState extends State<AdminHome> {
         context: context,
         builder: (BuildContext context) {
           // return object of type Dialog
-          return MyAlertDialog(okText: "Ok", title: "Change Alert Status",
+          return MyAlertDialog(
+            okText: "Ok",
+            title: "Change Alert Status",
             message: RichText(
               text: TextSpan(
                 children: <TextSpan>[
@@ -418,10 +443,10 @@ class _AdminHomeState extends State<AdminHome> {
                   ),
                 ],
               ),
-            ),);
+            ),
+          );
         },
       );
-
     }).catchError((error) {
       var errorMessage = error.toString();
       print('deleteAlert Error: $errorMessage');
@@ -430,7 +455,9 @@ class _AdminHomeState extends State<AdminHome> {
         context: context,
         builder: (BuildContext context) {
           // return object of type Dialog
-          return MyAlertDialog(okText: "Ok", title: "Change Alert Status",
+          return MyAlertDialog(
+            okText: "Ok",
+            title: "Change Alert Status",
             message: RichText(
               text: TextSpan(
                 children: <TextSpan>[
@@ -441,10 +468,10 @@ class _AdminHomeState extends State<AdminHome> {
                   ),
                 ],
               ),
-            ),);
+            ),
+          );
         },
       );
     });
   }
-
 }
