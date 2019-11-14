@@ -1,6 +1,5 @@
 # notifications_admin
-
-A new Flutter project.
+Flutter Web Sample app.
 
 ## Getting Started
 
